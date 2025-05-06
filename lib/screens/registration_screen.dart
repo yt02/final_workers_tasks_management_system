@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'login_screen.dart';
+import 'package:flutter/services.dart';
 
 class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
+
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
@@ -15,8 +20,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
+  File? _profileImage;
+  final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
   String? _errorMessage;
+  bool _obscurePassword = true;
   late final AnimationController _animationController;
   late final Animation<double> _fadeAnimation;
   late final Animation<Offset> _slideAnimation;
@@ -71,6 +79,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
     });
   }
 
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 85,
+      );
+      
+      if (pickedFile != null) {
+        setState(() {
+          _profileImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      _showError('Error picking image: ${e.toString()}');
+    }
+  }
+
   Future<void> _registerWorker() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -81,29 +108,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
     });
     try {
       final url = Uri.parse('http://10.0.2.2/workers_tasks_management_system/api/register_worker.php');
-      final Map<String, String> body = {
-        'full_name': _fullNameController.text.trim(),
-        'email': _emailController.text.trim(),
-        'password': _passwordController.text,
-        'phone': _phoneController.text.trim(),
-        'address': _addressController.text.trim(),
-      };
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(body),
-      );
+      
+      // Create multipart request
+      var request = http.MultipartRequest('POST', url);
+      
+      // Add text fields
+      request.fields['full_name'] = _fullNameController.text.trim();
+      request.fields['email'] = _emailController.text.trim();
+      request.fields['password'] = _passwordController.text;
+      request.fields['phone'] = _phoneController.text.trim();
+      request.fields['address'] = _addressController.text.trim();
+      
+      // Add image if selected
+      if (_profileImage != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image',
+            _profileImage!.path,
+          ),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success']) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Registration successful! Please login.')),
+            const SnackBar(content: Text('Registration successful! Please login.')),
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
         } else {
           _showError(data['message'] ?? 'Registration failed');
@@ -190,26 +227,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Container(
-                                  padding: EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        offset: Offset(0, 5),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Icon(
-                                    Icons.app_registration,
-                                    size: 60,
-                                    color: Colors.indigo,
+                                GestureDetector(
+                                  onTap: _pickImage,
+                                  child: Container(
+                                    width: 120,
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 5),
+                                        ),
+                                      ],
+                                    ),
+                                    child: _profileImage != null
+                                        ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(60),
+                                            child: Image.file(
+                                              _profileImage!,
+                                              width: 120,
+                                              height: 120,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.add_a_photo,
+                                            size: 40,
+                                            color: Colors.indigo,
+                                          ),
                                   ),
                                 ),
-                                SizedBox(height: 24),
+                                const SizedBox(height: 24),
                                 Text(
                                   'Register as Worker',
                                   style: TextStyle(
@@ -262,11 +313,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                   decoration: InputDecoration(
                                     labelText: 'Password',
                                     prefixIcon: Icon(Icons.lock, color: Colors.indigo),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                        color: Colors.indigo,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
+                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  obscureText: true,
+                                  obscureText: _obscurePassword,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter a password';
@@ -287,10 +349,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  keyboardType: TextInputType.phone,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Please enter your phone number';
+                                    }
+                                    if (!RegExp(r'^\d+$').hasMatch(value)) {
+                                      return 'Phone number must contain only digits';
+                                    }
+                                    if (value.length < 10) {
+                                      return 'Phone number must be at least 10 digits';
                                     }
                                     return null;
                                   },
@@ -300,11 +371,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                   controller: _addressController,
                                   decoration: InputDecoration(
                                     labelText: 'Address',
-                                    prefixIcon: Icon(Icons.location_on, color: Colors.indigo),
+                                    prefixIcon: const Icon(Icons.location_on, color: Colors.indigo),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
+                                  maxLines: 3,
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Please enter your address';

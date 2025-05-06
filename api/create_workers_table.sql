@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS workers (
     password VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     address TEXT NOT NULL,
+    profile_image VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ); 

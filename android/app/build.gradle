@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.workers_tasks_management_system"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

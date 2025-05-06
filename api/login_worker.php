@@ -28,7 +28,7 @@ try {
     $hashed_password = sha1($data['password']);
 
     // Check credentials
-    $stmt = $pdo->prepare("SELECT id, full_name, email, phone, address FROM workers WHERE email = ? AND password = ?");
+    $stmt = $pdo->prepare("SELECT id, full_name, email, phone, address, profile_image FROM workers WHERE email = ? AND password = ?");
     $stmt->execute([$data['email'], $hashed_password]);
     
     if ($stmt->rowCount() > 0) {

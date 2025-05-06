@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Map<String, dynamic> workerData;
 
-  ProfileScreen({required this.workerData});
+  const ProfileScreen({super.key, required this.workerData});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -15,12 +16,21 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('worker_data');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -31,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0.2),
+      begin: const Offset(0, 0.2),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
@@ -47,6 +57,62 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  Widget _buildProfileImage() {
+    print('Building profile image widget');
+    print('Worker data: ${widget.workerData}');
+    
+    if (widget.workerData['profile_image'] == null || widget.workerData['profile_image'].toString().isEmpty) {
+      print('No profile image found in worker data');
+      return const Icon(
+        Icons.person,
+        size: 40,
+        color: Colors.indigo,
+      );
+    }
+
+    // Ensure the path doesn't start with a slash
+    String imagePath = widget.workerData['profile_image'].toString();
+    if (imagePath.startsWith('/')) {
+      imagePath = imagePath.substring(1);
+    }
+
+    final imageUrl = 'http://10.0.2.2/workers_tasks_management_system/$imagePath';
+    print('Attempting to load profile image from: $imageUrl');
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(40),
+      child: Image.network(
+        imageUrl,
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            print('Image loaded successfully');
+            return child;
+          }
+          print('Loading progress: ${loadingProgress.cumulativeBytesLoaded}/${loadingProgress.expectedTotalBytes}');
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error');
+          print('Stack trace: $stackTrace');
+          return const Icon(
+            Icons.person,
+            size: 40,
+            color: Colors.indigo,
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -72,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 child: SlideTransition(
                   position: _slideAnimation,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                     child: Row(
                       children: [
                         Container(
@@ -82,21 +148,17 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               BoxShadow(
                                 color: Colors.black26,
                                 blurRadius: 10,
-                                offset: Offset(0, 5),
+                                offset: const Offset(0, 5),
                               ),
                             ],
                           ),
                           child: CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.person,
-                              size: 40,
-                              color: Colors.indigo,
-                            ),
+                            child: _buildProfileImage(),
                           ),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,10 +171,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                   color: Colors.indigo.shade800,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
                                 widget.workerData['email'],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.white70,
                                 ),
@@ -135,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
                         ),
@@ -143,12 +205,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           BoxShadow(
                             color: Colors.black12,
                             blurRadius: 20,
-                            offset: Offset(0, -5),
+                            offset: const Offset(0, -5),
                           ),
                         ],
                       ),
                       child: SingleChildScrollView(
-                        padding: EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(24),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -160,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                 color: Colors.indigo.shade800,
                               ),
                             ),
-                            SizedBox(height: 24),
+                            const SizedBox(height: 24),
                             _buildInfoCard(
                               Icons.badge,
                               'Worker ID',
@@ -168,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               Colors.indigo.shade100,
                               'Your unique identification number',
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             _buildInfoCard(
                               Icons.phone,
                               'Phone Number',
@@ -176,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               Colors.cyan.shade100,
                               'Your contact number',
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             _buildInfoCard(
                               Icons.location_on,
                               'Address',
@@ -184,21 +246,16 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               Colors.orange.shade100,
                               'Your current address',
                             ),
-                            SizedBox(height: 32),
+                            const SizedBox(height: 32),
                             Center(
                               child: ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                                  );
-                                },
-                                icon: Icon(Icons.logout),
-                                label: Text('Logout'),
+                                onPressed: _logout,
+                                icon: const Icon(Icons.logout),
+                                label: const Text('Logout'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.indigo,
                                   foregroundColor: Colors.white,
-                                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -227,11 +284,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: iconColor,
                 borderRadius: BorderRadius.circular(12),
@@ -239,7 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 5,
-                    offset: Offset(0, 2),
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
@@ -249,27 +306,27 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 size: 24,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     value,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     description,
                     style: TextStyle(

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_screen.dart';
 import 'registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -15,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
+  bool _obscurePassword = true;
   late final AnimationController _animationController;
   late final Animation<double> _fadeAnimation;
   late final Animation<Offset> _slideAnimation;
@@ -24,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -35,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0.2),
+      begin: const Offset(0, 0.2),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
@@ -45,6 +49,27 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
 
     _animationController.forward();
+    _checkExistingSession();
+  }
+
+  Future<void> _checkExistingSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    final workerData = prefs.getString('worker_data');
+    if (workerData != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileScreen(
+            workerData: json.decode(workerData),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _saveSession(Map<String, dynamic> workerData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('worker_data', json.encode(workerData));
   }
 
   @override
@@ -60,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       _errorMessage = message;
     });
     // Auto-hide error after 5 seconds
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
         setState(() {
           _errorMessage = null;
@@ -98,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success']) {
+          await _saveSession(data['worker']);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => ProfileScreen(workerData: data['worker'])),
@@ -144,8 +170,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     children: [
                       if (_errorMessage != null)
                         Container(
-                          margin: EdgeInsets.only(bottom: 16),
-                          padding: EdgeInsets.all(16),
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.red.shade100,
                             borderRadius: BorderRadius.circular(12),
@@ -153,8 +179,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.error_outline, color: Colors.red),
-                              SizedBox(width: 8),
+                              const Icon(Icons.error_outline, color: Colors.red),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   _errorMessage!,
@@ -165,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.close, color: Colors.red),
+                                icon: const Icon(Icons.close, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
                                     _errorMessage = null;
@@ -188,8 +214,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
-                                  padding: EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: const BoxDecoration(
                                     color: Colors.white,
                                     shape: BoxShape.circle,
                                     boxShadow: [
@@ -200,13 +226,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                       ),
                                     ],
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.work,
                                     size: 60,
                                     color: Colors.indigo,
                                   ),
                                 ),
-                                SizedBox(height: 24),
+                                const SizedBox(height: 24),
                                 Text(
                                   'Worker Task Management',
                                   style: TextStyle(
@@ -215,12 +241,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                     color: Colors.indigo.shade800,
                                   ),
                                 ),
-                                SizedBox(height: 32),
+                                const SizedBox(height: 32),
                                 TextFormField(
                                   controller: _emailController,
                                   decoration: InputDecoration(
                                     labelText: 'Email',
-                                    prefixIcon: Icon(Icons.email, color: Colors.indigo),
+                                    prefixIcon: const Icon(Icons.email, color: Colors.indigo),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -236,25 +262,36 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 TextFormField(
                                   controller: _passwordController,
                                   decoration: InputDecoration(
                                     labelText: 'Password',
-                                    prefixIcon: Icon(Icons.lock, color: Colors.indigo),
+                                    prefixIcon: const Icon(Icons.lock, color: Colors.indigo),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                        color: Colors.indigo,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
+                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  obscureText: true,
+                                  obscureText: _obscurePassword,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter a password';
+                                      return 'Please enter your password';
                                     }
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: 24),
+                                const SizedBox(height: 24),
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
@@ -264,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      padding: EdgeInsets.symmetric(vertical: 16),
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
                                     ),
                                     child: _isLoading
                                         ? const CircularProgressIndicator(color: Colors.white)
@@ -274,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                           ),
                                   ),
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(
@@ -282,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                       MaterialPageRoute(builder: (context) => RegistrationScreen()),
                                     );
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Don\'t have an account? Register here',
                                     style: TextStyle(color: Colors.indigo),
                                   ),
