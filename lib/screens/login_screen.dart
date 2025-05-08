@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_screen.dart';
 import 'registration_screen.dart';
+import '../config/app_config.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     });
 
     try {
-      final url = Uri.parse('http://10.0.2.2/workers_tasks_management_system/api/login_worker.php');
+      final url = Uri.parse(AppConfig.loginUrl);
       
       final Map<String, String> body = {
         'email': _emailController.text.trim(),

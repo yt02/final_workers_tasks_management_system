@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_screen.dart';
+import '../config/app_config.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Map<String, dynamic> workerData;
@@ -72,13 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       );
     }
 
-    // Ensure the path doesn't start with a slash
-    String imagePath = widget.workerData['profile_image'].toString();
-    if (imagePath.startsWith('/')) {
-      imagePath = imagePath.substring(1);
-    }
-
-    final imageUrl = 'http://10.0.2.2/workers_tasks_management_system/$imagePath';
+    final imageUrl = AppConfig.getImageUrl(widget.workerData['profile_image'].toString());
     print('Attempting to load profile image from: $imageUrl');
 
     return ClipRRect(

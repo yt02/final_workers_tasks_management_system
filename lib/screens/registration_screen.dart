@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'login_screen.dart';
 import 'package:flutter/services.dart';
+import '../config/app_config.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -107,7 +108,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
       _errorMessage = null;
     });
     try {
-      final url = Uri.parse('http://10.0.2.2/workers_tasks_management_system/api/register_worker.php');
+      final url = Uri.parse(AppConfig.registerUrl);
       
       // Create multipart request
       var request = http.MultipartRequest('POST', url);
