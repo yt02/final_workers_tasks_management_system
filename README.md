@@ -25,7 +25,7 @@ A Flutter-based mobile application for managing worker tasks and profiles. This 
 
 ## Screenshots
 <div style="width:60px ; height:60px">
-![image](https://github.com/yt02/workers_tasks_management_system/blob/main/Screenshot_1746553061.png?raw=true)  
+![image](https://github.com/yt02/workers_tasks_management_system/blob/main/Screenshot_1746553061.png?raw=true "image")  
 </div>
 
 
