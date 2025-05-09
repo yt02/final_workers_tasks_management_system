@@ -24,9 +24,7 @@ A Flutter-based mobile application for managing worker tasks and profiles. This 
   - Form validation with user-friendly error messages
 
 ## Screenshots
-<div style="width:60px ; height:60px">
-![image](https://github.com/yt02/workers_tasks_management_system/blob/main/Screenshot_1746553061.png?raw=true "image")  
-</div>
+![Screenshot_1746553054](https://github.com/user-attachments/assets/31cdcafe-6b10-4496-b42f-988274c5613d)
 
 
 ![Screenshot_1746553054](https://github.com/user-attachments/assets/01b753f4-28af-49d5-ad58-397b6c3d2407)
