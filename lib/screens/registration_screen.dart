@@ -82,8 +82,42 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
 
   Future<void> _pickImage() async {
     try {
+      await showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return SafeArea(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: const Text('Take Photo'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _getImage(ImageSource.camera);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Choose from Gallery'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _getImage(ImageSource.gallery);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      _showError('Error showing options: ${e.toString()}');
+    }
+  }
+
+  Future<void> _getImage(ImageSource source) async {
+    try {
       final XFile? pickedFile = await _picker.pickImage(
-        source: ImageSource.gallery,
+        source: source,
         maxWidth: 800,
         maxHeight: 800,
         imageQuality: 85,
@@ -254,10 +288,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                               fit: BoxFit.cover,
                                             ),
                                           )
-                                        : const Icon(
-                                            Icons.add_a_photo,
-                                            size: 40,
-                                            color: Colors.indigo,
+                                        : Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.add_a_photo,
+                                                size: 40,
+                                                color: Colors.indigo.shade300,
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Add Photo',
+                                                style: TextStyle(
+                                                  color: Colors.indigo.shade300,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                   ),
                                 ),
