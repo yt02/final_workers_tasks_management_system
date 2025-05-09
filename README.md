@@ -1,27 +1,71 @@
 # Workers Tasks Management System
 
-A Flutter-based mobile application for managing worker tasks and profiles. This system provides a seamless interface for workers to register, login, and manage their information.
+A Flutter application for managing worker tasks and profiles.
+
+## Configuration
+
+The application uses a centralized configuration system located in `lib/config/app_config.dart`. This makes it easy to modify the base URL and API endpoints across the application.
+
+### Changing the IP Address
+
+To change the IP address or base URL of the application:
+
+1. Open `lib/config/app_config.dart`
+2. Locate the `baseUrl` constant:
+```dart
+static const String baseUrl = 'http://10.0.2.2/workers_tasks_management_system';
+```
+3. Update the IP address to your desired value. For example:
+```dart
+static const String baseUrl = 'http://192.168.1.100/workers_tasks_management_system';
+```
+
+The configuration class automatically handles:
+- API endpoint URLs
+- Image URLs
+- Path formatting
 
 ## Features
 
-- **User Authentication**
-  - Secure login system with password visibility toggle
-  - New worker registration with optional profile picture
-  - Profile management with image display
-  - Session persistence using SharedPreferences
+- Worker Registration
+- Worker Login
+- Profile Management
+- Profile Image Upload
+- Task Management
 
-- **Worker Profile Management**
-  - View and manage personal information
-  - Update contact details
-  - Profile picture upload and display
-  - Secure profile access
+## Setup
 
-- **Modern UI/UX**
-  - Clean and intuitive interface
-  - Smooth animations and transitions
-  - Responsive design
-  - Password visibility toggle for better user experience
-  - Form validation with user-friendly error messages
+1. Clone the repository
+2. Update the `baseUrl` in `lib/config/app_config.dart` to match your server's IP address
+3. Run `flutter pub get` to install dependencies
+4. Run the application using `flutter run`
+
+## Development
+
+The application is built using:
+- Flutter
+- PHP (Backend)
+- MySQL (Database)
+
+## File Structure
+
+```
+lib/
+├── config/
+│   └── app_config.dart    # Configuration settings
+├── screens/
+│   ├── login_screen.dart
+│   ├── registration_screen.dart
+│   └── profile_screen.dart
+└── main.dart
+```
+
+## API Endpoints
+
+The application uses the following API endpoints (configured in `app_config.dart`):
+- Login: `$baseUrl/api/login_worker.php`
+- Registration: `$baseUrl/api/register_worker.php`
+
 
 ## Screenshots
 
