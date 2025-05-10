@@ -13,11 +13,11 @@ To change the IP address or base URL of the application:
 1. Open `lib/config/app_config.dart`
 2. Locate the `baseUrl` constant:
 ```dart
-static const String baseUrl = 'http://10.0.2.2/workers_tasks_management_system';
+static const String baseUrl = 'http://10.0.2.2';
 ```
 3. Update the IP address to your desired value. For example:
 ```dart
-static const String baseUrl = 'http://192.168.1.100/workers_tasks_management_system';
+static const String baseUrl = 'http://192.168.1.100';
 ```
 
 The configuration class automatically handles:
@@ -164,8 +164,8 @@ lib/
 
 ## API Endpoints
 
-- Login: `http://10.0.2.2/workers_tasks_management_system/api/login_worker.php`
-- Registration: `http://10.0.2.2/workers_tasks_management_system/api/register_worker.php`
+- Login: `http://10.0.2.2/api/login_worker.php`
+- Registration: `http://10.0.2.2/api/register_worker.php`
 
 ### API Configuration
 
