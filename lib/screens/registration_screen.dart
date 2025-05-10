@@ -35,7 +35,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -44,7 +44,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
       ),
     );
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0.2),
+      begin: const Offset(0, 0.2),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
@@ -71,7 +71,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
       _errorMessage = message;
     });
     // Auto-hide error after 5 seconds
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
         setState(() {
           _errorMessage = null;
@@ -219,8 +219,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                     children: [
                       if (_errorMessage != null)
                         Container(
-                          margin: EdgeInsets.only(bottom: 16),
-                          padding: EdgeInsets.all(16),
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Colors.red.shade100,
                             borderRadius: BorderRadius.circular(12),
@@ -228,8 +228,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.error_outline, color: Colors.red),
-                              SizedBox(width: 8),
+                              const Icon(Icons.error_outline, color: Colors.red),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   _errorMessage!,
@@ -240,7 +240,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.close, color: Colors.red),
+                                icon: const Icon(Icons.close, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
                                     _errorMessage = null;
@@ -267,14 +267,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                   child: Container(
                                     width: 120,
                                     height: 120,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white,
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.black26,
                                           blurRadius: 10,
-                                          offset: const Offset(0, 5),
+                                          offset: Offset(0, 5),
                                         ),
                                       ],
                                     ),
@@ -317,12 +317,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                     color: Colors.indigo.shade800,
                                   ),
                                 ),
-                                SizedBox(height: 32),
+                                const SizedBox(height: 32),
                                 TextFormField(
                                   controller: _fullNameController,
                                   decoration: InputDecoration(
                                     labelText: 'Full Name',
-                                    prefixIcon: Icon(Icons.person, color: Colors.indigo),
+                                    prefixIcon: const Icon(Icons.person, color: Colors.indigo),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -334,12 +334,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 TextFormField(
                                   controller: _emailController,
                                   decoration: InputDecoration(
                                     labelText: 'Email',
-                                    prefixIcon: Icon(Icons.email, color: Colors.indigo),
+                                    prefixIcon: const Icon(Icons.email, color: Colors.indigo),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -355,12 +355,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 TextFormField(
                                   controller: _passwordController,
                                   decoration: InputDecoration(
                                     labelText: 'Password',
-                                    prefixIcon: Icon(Icons.lock, color: Colors.indigo),
+                                    prefixIcon: const Icon(Icons.lock, color: Colors.indigo),
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         _obscurePassword ? Icons.visibility : Icons.visibility_off,
@@ -387,12 +387,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 TextFormField(
                                   controller: _phoneController,
                                   decoration: InputDecoration(
                                     labelText: 'Phone Number',
-                                    prefixIcon: Icon(Icons.phone, color: Colors.indigo),
+                                    prefixIcon: const Icon(Icons.phone, color: Colors.indigo),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -414,7 +414,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 TextFormField(
                                   controller: _addressController,
                                   decoration: InputDecoration(
@@ -432,7 +432,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: 24),
+                                const SizedBox(height: 24),
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
@@ -442,7 +442,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      padding: EdgeInsets.symmetric(vertical: 16),
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
                                     ),
                                     child: _isLoading
                                         ? const CircularProgressIndicator(color: Colors.white)
@@ -452,15 +452,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> with SingleTick
                                           ),
                                   ),
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                                      MaterialPageRoute(builder: (context) => const LoginScreen()),
                                     );
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Already have an account? Login here',
                                     style: TextStyle(color: Colors.indigo),
                                   ),
