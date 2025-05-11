@@ -72,6 +72,9 @@ The application uses the following API endpoints (configured in `app_config.dart
 
 ![Screenshot_1746553061](https://github.com/user-attachments/assets/1dc17db4-8e5f-440a-b5e7-24177fc78ffb)
 
+| Login Page                                                                          | Profile Page                                                                          |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| ![login](https://github.com/user-attachments/assets/7440bff8-9a84-4fd4-901d-8fbf933d70d1) | ![profile](https://github.com/user-attachments/assets/1dc17db4-8e5f-440a-b5e7-24177fc78ffb) |
 
 
 
