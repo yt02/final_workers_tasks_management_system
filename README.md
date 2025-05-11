@@ -105,6 +105,8 @@ flutter pub get
    - Install XAMPP
    - Place the PHP files in the htdocs directory
    - Start Apache and MySQL services
+     ![image](https://github.com/user-attachments/assets/9d6094bf-0eef-41b7-9ea4-76fb5f74e787)
+
 
    ## Database Setup
 
