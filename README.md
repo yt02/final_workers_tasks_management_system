@@ -31,7 +31,6 @@ The configuration class automatically handles:
 - Worker Login
 - Profile Management
 - Profile Image Upload
-- Task Management
 
 ## Setup
 
@@ -68,13 +67,11 @@ The application uses the following API endpoints (configured in `app_config.dart
 
 
 ## Screenshots
-![Screenshot_1746553054 (1)](https://github.com/user-attachments/assets/7440bff8-9a84-4fd4-901d-8fbf933d70d1)
 
-![Screenshot_1746553061](https://github.com/user-attachments/assets/1dc17db4-8e5f-440a-b5e7-24177fc78ffb)
+| Login Page                                                                                | Register Page                                                                               | Profile Page           |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |------------------------|
+| ![Screenshot_1746952892](https://github.com/user-attachments/assets/06aa404e-0205-4dcd-8ab0-523790c2e15c)| ![Register](https://github.com/user-attachments/assets/85ba7b6c-f422-494f-9ea9-7b60a9ae3ae8)| ![Screenshot_1746863162](https://github.com/user-attachments/assets/03401071-5149-47e2-8a1b-2585eaa4c77d)|
 
-| Login Page                                                                          | Profile Page                                                                          |
-| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| ![login](https://github.com/user-attachments/assets/7440bff8-9a84-4fd4-901d-8fbf933d70d1) | ![profile](https://github.com/user-attachments/assets/1dc17db4-8e5f-440a-b5e7-24177fc78ffb) |
 
 
 
