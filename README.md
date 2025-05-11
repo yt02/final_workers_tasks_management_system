@@ -88,7 +88,7 @@ The application uses the following API endpoints (configured in `app_config.dart
 
 1. Clone the repository:
 ```bash
-git clone [your-repository-url]
+git clone https://github.com/yt02/workers_tasks_management_system.git
 ```
 
 2. Navigate to the project directory:
