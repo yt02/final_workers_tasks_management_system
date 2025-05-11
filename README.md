@@ -2,42 +2,12 @@
 
 A Flutter application for managing worker tasks and profiles.
 
-## Configuration
-
-The application uses a centralized configuration system located in `lib/config/app_config.dart`. This makes it easy to modify the base URL and API endpoints across the application.
-
-### Changing the IP Address
-
-To change the IP address or base URL of the application:
-
-1. Open `lib/config/app_config.dart`
-2. Locate the `baseUrl` constant:
-```dart
-static const String baseUrl = 'http://10.0.2.2';
-```
-3. Update the IP address to your desired value. For example:
-```dart
-static const String baseUrl = 'http://192.168.1.100';
-```
-
-The configuration class automatically handles:
-- API endpoint URLs
-- Image URLs
-- Path formatting
-
 ## Features
 
 - Worker Registration
 - Worker Login
 - Profile Management
 - Profile Image Upload
-
-## Setup
-
-1. Clone the repository
-2. Update the `baseUrl` in `lib/config/app_config.dart` to match your server's IP address
-3. Run `flutter pub get` to install dependencies
-4. Run the application using `flutter run`
 
 ## Development
 
@@ -59,11 +29,6 @@ lib/
 └── main.dart
 ```
 
-## API Endpoints
-
-The application uses the following API endpoints (configured in `app_config.dart`):
-- Login: `$baseUrl/api/login_worker.php`
-- Registration: `$baseUrl/api/register_worker.php`
 
 
 ## Screenshots
@@ -166,10 +131,32 @@ lib/
 
 ## API Endpoints
 
-- Login: `http://10.0.2.2/api/login_worker.php`
-- Registration: `http://10.0.2.2/api/register_worker.php`
+The application uses the following API endpoints (configured in `app_config.dart`):
+- Login: `$baseUrl/api/login_worker.php`
+- Registration: `$baseUrl/api/register_worker.php`
 
-### API Configuration
+## API Configuration
+
+The application uses a centralized configuration system located in `lib/config/app_config.dart`. This makes it easy to modify the base URL and API endpoints across the application.
+
+### Changing the IP Address
+
+To change the IP address or base URL of the application:
+
+1. Open `lib/config/app_config.dart`
+2. Locate the `baseUrl` constant:
+```dart
+static const String baseUrl = 'http://10.0.2.2';
+```
+3. Update the IP address to your desired value. For example:
+```dart
+static const String baseUrl = 'http://192.168.1.100';
+```
+
+The configuration class automatically handles:
+- API endpoint URLs
+- Image URLs
+- Path formatting
 
 The application uses `10.0.2.2` as the localhost IP address when running on an Android emulator. This is because:
 - `10.0.2.2` is a special alias to your host machine's loopback interface (127.0.0.1) when using Android emulator
