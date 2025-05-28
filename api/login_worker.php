@@ -1,4 +1,8 @@
 <?php
+// Prevent any HTML output
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -28,11 +32,20 @@ try {
     $hashed_password = sha1($data['password']);
 
     // Check credentials
-    $stmt = $pdo->prepare("SELECT id, full_name, email, phone, address, profile_image FROM workers WHERE email = ? AND password = ?");
-    $stmt->execute([$data['email'], $hashed_password]);
+    $stmt = $conn->prepare("SELECT id, full_name, email, phone, address, profile_image FROM tbl_workers WHERE email = ? AND password = ?");
+    if (!$stmt) {
+        throw new Exception("Failed to prepare statement: " . $conn->error);
+    }
     
-    if ($stmt->rowCount() > 0) {
-        $worker = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->bind_param("ss", $data['email'], $hashed_password);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to execute statement: " . $stmt->error);
+    }
+    
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $worker = $result->fetch_assoc();
         echo json_encode([
             'success' => true,
             'message' => 'Login successful',
@@ -41,8 +54,15 @@ try {
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
     }
-} catch(PDOException $e) {
-    error_log('Database error: ' . $e->getMessage());
+} catch(Exception $e) {
+    error_log('Error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Login failed: ' . $e->getMessage()]);
+} finally {
+    if (isset($stmt)) {
+        $stmt->close();
+    }
+    if (isset($conn)) {
+        $conn->close();
+    }
 }
 ?> 

@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS workers_tasks_db;
 USE workers_tasks_db;
 
-CREATE TABLE IF NOT EXISTS workers (
+CREATE TABLE IF NOT EXISTS tbl_workers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,

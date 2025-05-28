@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_screen.dart';
 import 'registration_screen.dart';
+import 'task_list_screen.dart';
 import '../config/app_config.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -57,20 +58,28 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     final prefs = await SharedPreferences.getInstance();
     final workerData = prefs.getString('worker_data');
     if (workerData != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfileScreen(
-            workerData: json.decode(workerData),
+      final worker = json.decode(workerData);
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TaskListScreen(
+              workerId: int.parse(worker['id'].toString()),
+              workerName: worker['full_name'].toString(),
+              workerData: worker,
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 
   Future<void> _saveSession(Map<String, dynamic> workerData) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('worker_data', json.encode(workerData));
+    if (workerData['profile_image'] != null && workerData['profile_image'].toString().isNotEmpty) {
+      await prefs.setString('profile_image', workerData['profile_image'].toString());
+    }
   }
 
   @override
@@ -125,10 +134,18 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         final data = json.decode(response.body);
         if (data['success']) {
           await _saveSession(data['worker']);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileScreen(workerData: data['worker'])),
-          );
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskListScreen(
+                  workerId: int.parse(data['worker']['id'].toString()),
+                  workerName: data['worker']['full_name'].toString(),
+                  workerData: data['worker'],
+                ),
+              ),
+            );
+          }
         } else {
           _showError(data['message'] ?? 'Login failed');
         }

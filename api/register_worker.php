@@ -1,4 +1,8 @@
 <?php
+// Prevent any HTML output
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -40,12 +44,22 @@ if (strlen($data['password']) < 6) {
 
 try {
     // Check if email already exists
-    $stmt = $pdo->prepare("SELECT id FROM workers WHERE email = ?");
-    $stmt->execute([$data['email']]);
-    if ($stmt->rowCount() > 0) {
+    $stmt = $conn->prepare("SELECT id FROM tbl_workers WHERE email = ?");
+    if (!$stmt) {
+        throw new Exception("Failed to prepare email check statement: " . $conn->error);
+    }
+    
+    $stmt->bind_param("s", $data['email']);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to execute email check: " . $stmt->error);
+    }
+    
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
         echo json_encode(['success' => false, 'message' => 'Email already registered']);
         exit();
     }
+    $stmt->close();
 
     // Handle image upload
     $profile_image_path = null;
@@ -92,25 +106,49 @@ try {
     // Hash password using SHA1
     $hashed_password = sha1($data['password']);
 
-    try {
-        // Insert new worker with NULL for profile_image if no image was uploaded
-        $stmt = $pdo->prepare("INSERT INTO workers (full_name, email, password, phone, address, profile_image) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $data['full_name'],
-            $data['email'],
-            $hashed_password,
-            $data['phone'],
-            $data['address'],
-            $profile_image_path
-        ]);
-
-        echo json_encode(['success' => true, 'message' => 'Registration successful']);
-    } catch(PDOException $e) {
-        error_log('Database error: ' . $e->getMessage());
-        echo json_encode(['success' => false, 'message' => 'Registration failed: ' . $e->getMessage()]);
+    // Insert new worker
+    $stmt = $conn->prepare("INSERT INTO tbl_workers (full_name, email, password, phone, address, profile_image) VALUES (?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        throw new Exception("Failed to prepare insert statement: " . $conn->error);
     }
-} catch(PDOException $e) {
-    error_log('Database error: ' . $e->getMessage());
+    
+    $stmt->bind_param("ssssss", 
+        $data['full_name'],
+        $data['email'],
+        $hashed_password,
+        $data['phone'],
+        $data['address'],
+        $profile_image_path
+    );
+    
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to insert worker: " . $stmt->error);
+    }
+
+    // Get the inserted worker's ID
+    $worker_id = $conn->insert_id;
+
+    echo json_encode([
+        'success' => true, 
+        'message' => 'Registration successful',
+        'worker' => [
+            'id' => $worker_id,
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'profile_image' => $profile_image_path
+        ]
+    ]);
+} catch (Exception $e) {
+    error_log('Error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Registration failed: ' . $e->getMessage()]);
+} finally {
+    if (isset($stmt)) {
+        $stmt->close();
+    }
+    if (isset($conn)) {
+        $conn->close();
+    }
 }
 ?> 
