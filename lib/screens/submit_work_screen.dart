@@ -26,6 +26,17 @@ class _SubmitWorkScreenState extends State<SubmitWorkScreen> {
   bool _isSubmitting = false;
   String? _error;
 
+  Color get statusColor {
+    if (widget.work.status == 'completed') {
+      return Colors.green;
+    } else if (widget.work.dueDate.isBefore(DateTime.now())) {
+      return Colors.red;
+    }
+    return Colors.orange;
+  }
+
+  bool get isOverdue => widget.work.dueDate.isBefore(DateTime.now());
+
   @override
   void initState() {
     super.initState();
@@ -173,93 +184,168 @@ class _SubmitWorkScreenState extends State<SubmitWorkScreen> {
                     children: [
                       Card(
                         elevation: 4,
+                        margin: const EdgeInsets.only(bottom: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.task_alt,
-                                    color: Colors.indigo.shade700,
-                                    size: 24,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      widget.work.title,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.indigo.shade800,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: widget.work.status == 'completed'
-                                          ? Colors.green.shade100
-                                          : Colors.orange.shade100,
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: widget.work.status == 'completed'
-                                            ? Colors.green
-                                            : Colors.orange,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      widget.work.status.toUpperCase(),
-                                      style: TextStyle(
-                                        color: widget.work.status == 'completed'
-                                            ? Colors.green.shade700
-                                            : Colors.orange.shade700,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.indigo.shade100,
+                                width: 1,
                               ),
-                              const SizedBox(height: 12),
-                              Text(
-                                widget.work.description,
-                                style: TextStyle(
-                                  color: Colors.indigo.shade600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.calendar_today,
-                                    size: 16,
-                                    color: widget.work.dueDate.isBefore(DateTime.now())
-                                        ? Colors.red
-                                        : Colors.green,
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          widget.work.title,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.indigo.shade800,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: statusColor.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(
+                                            color: statusColor,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          widget.work.status.toUpperCase(),
+                                          style: TextStyle(
+                                            color: statusColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(height: 12),
                                   Text(
-                                    'Due: ${widget.work.dueDate.toString().split(' ')[0]}',
+                                    widget.work.description,
                                     style: TextStyle(
-                                      color: widget.work.dueDate.isBefore(DateTime.now())
-                                          ? Colors.red
-                                          : Colors.green,
-                                      fontWeight: FontWeight.w500,
+                                      color: Colors.indigo.shade600,
+                                      fontSize: 14,
                                     ),
                                   ),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.calendar_today,
+                                              size: 16,
+                                              color: isOverdue
+                                                  ? Colors.red
+                                                  : Colors.indigo.shade600,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              'Due: ${widget.work.dueDate.toString().split(' ')[0]}',
+                                              style: TextStyle(
+                                                color: isOverdue
+                                                    ? Colors.red
+                                                    : Colors.indigo.shade600,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.assignment_turned_in,
+                                            size: 16,
+                                            color: Colors.indigo.shade600,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            'Assigned: ${widget.work.dateAssigned.toString().split(' ')[0]}',
+                                            style: TextStyle(
+                                              color: Colors.indigo.shade600,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  if (widget.work.status == 'completed') ...[
+                                    const SizedBox(height: 16),
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.indigo.shade50,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.indigo.shade200,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.check_circle,
+                                                size: 16,
+                                                color: Colors.green.shade600,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                'Submission',
+                                                style: TextStyle(
+                                                  color: Colors.indigo.shade800,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                'Submitted: ${widget.work.submittedAt?.toString().split(' ')[0] ?? 'N/A'}',
+                                                style: TextStyle(
+                                                  color: Colors.indigo.shade600,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            widget.work.submissionText ?? 'No submission text provided',
+                                            style: TextStyle(
+                                              color: Colors.indigo.shade700,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
@@ -269,7 +355,7 @@ class _SubmitWorkScreenState extends State<SubmitWorkScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.indigo.shade800,
+                          color: const Color.fromARGB(255, 255, 255, 255),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -278,7 +364,7 @@ class _SubmitWorkScreenState extends State<SubmitWorkScreen> {
                             ? 'Update your submission details below'
                             : 'Please describe the work you completed',
                         style: TextStyle(
-                          color: Colors.indigo.shade600,
+                          color: const Color.fromARGB(255, 242, 243, 245),
                           fontSize: 14,
                         ),
                       ),

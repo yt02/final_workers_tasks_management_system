@@ -55,6 +55,18 @@ class _TaskListScreenState extends State<TaskListScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success'] == true) {
+          // Log debug information if available
+          if (data['debug'] != null) {
+            print('Debug Info: ${data['debug']}');
+            print('Overdue tasks updated: ${data['debug']['overdue_updated']}');
+            print('Current date: ${data['debug']['current_date']}');
+            print('Pending tasks:');
+            for (var task in data['debug']['pending_tasks']) {
+              print('- Task: ${task['title']}, Due: ${task['due_date']}, Status: ${task['status']}');
+            }
+            print('Update query: ${data['debug']['query_debug']['update_query']}');
+          }
+          
           setState(() {
             _works = (data['works'] as List)
                 .map((work) => Work.fromJson(work))
@@ -170,6 +182,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
+                automaticallyImplyLeading: false,
                 title: Text(
                   'Welcome, ${widget.workerName}',
                   style: const TextStyle(
@@ -464,22 +477,45 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                                 const SizedBox(height: 12),
                                                 Row(
                                                   children: [
-                                                    Icon(
-                                                      Icons.calendar_today,
-                                                      size: 16,
-                                                      color: isOverdue
-                                                          ? Colors.red
-                                                          : Colors.indigo.shade600,
-                                                    ),
-                                                    const SizedBox(width: 4),
-                                                    Text(
-                                                      'Due: ${work.dueDate.toString().split(' ')[0]}',
-                                                      style: TextStyle(
-                                                        color: isOverdue
-                                                            ? Colors.red
-                                                            : Colors.indigo.shade600,
-                                                        fontWeight: FontWeight.w500,
+                                                    Expanded(
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.calendar_today,
+                                                            size: 16,
+                                                            color: isOverdue
+                                                                ? Colors.red
+                                                                : Colors.indigo.shade600,
+                                                          ),
+                                                          const SizedBox(width: 4),
+                                                          Text(
+                                                            'Due: ${work.dueDate.toString().split(' ')[0]}',
+                                                            style: TextStyle(
+                                                              color: isOverdue
+                                                                  ? Colors.red
+                                                                  : Colors.indigo.shade600,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.assignment_turned_in,
+                                                          size: 16,
+                                                          color: Colors.indigo.shade600,
+                                                        ),
+                                                        const SizedBox(width: 4),
+                                                        Text(
+                                                          'Assigned: ${work.dateAssigned.toString().split(' ')[0]}',
+                                                          style: TextStyle(
+                                                            color: Colors.indigo.shade600,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
