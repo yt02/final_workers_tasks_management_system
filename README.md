@@ -8,6 +8,15 @@ A Flutter application for managing worker tasks and profiles.
 - Worker Login
 - Profile Management
 - Profile Image Upload
+- Task Management
+  - View assigned tasks
+  - Submit work
+  - Edit submissions
+  - Track task status
+- Task Statistics
+  - View completed tasks
+  - View pending tasks
+  - Total task count
 
 ## Development
 
@@ -22,23 +31,22 @@ The application is built using:
 lib/
 ├── config/
 │   └── app_config.dart    # Configuration settings
+├── models/
+│   └── work.dart         # Work model
 ├── screens/
 │   ├── login_screen.dart
 │   ├── registration_screen.dart
-│   └── profile_screen.dart
+│   ├── profile_screen.dart
+│   ├── task_list_screen.dart
+│   └── submit_work_screen.dart
 └── main.dart
 ```
 
-
-
 ## Screenshots
 
-| Login Page                                                                                | Register Page                                                                               | Profile Page           |
-| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |------------------------|
-| ![Screenshot_1746952892](https://github.com/user-attachments/assets/06aa404e-0205-4dcd-8ab0-523790c2e15c)| ![Register](https://github.com/user-attachments/assets/85ba7b6c-f422-494f-9ea9-7b60a9ae3ae8)| ![Screenshot_1746863162](https://github.com/user-attachments/assets/03401071-5149-47e2-8a1b-2585eaa4c77d)|
-
-
-
+| Login Page | Register Page | Profile Page | Task List Page |
+|------------|---------------|--------------|----------------|
+| ![Login](https://github.com/user-attachments/assets/06aa404e-0205-4dcd-8ab0-523790c2e15c) | ![Register](https://github.com/user-attachments/assets/85ba7b6c-f422-494f-9ea9-7b60a9ae3ae8) | ![Profile](https://github.com/user-attachments/assets/03401071-5149-47e2-8a1b-2585eaa4c77d) | ![Task List](https://github.com/user-attachments/assets/your-task-list-screenshot) |
 
 ## Getting Started
 
@@ -70,18 +78,17 @@ flutter pub get
    - Install XAMPP
    - Place the PHP files in the htdocs directory
    - Start Apache and MySQL services
-     ![image](https://github.com/user-attachments/assets/9d6094bf-0eef-41b7-9ea4-76fb5f74e787)
+     ![XAMPP Setup](https://github.com/user-attachments/assets/9d6094bf-0eef-41b7-9ea4-76fb5f74e787)
 
+## Database Setup
 
-   ## Database Setup
+### Database Structure
 
-   ### Database Structure
+The application uses MySQL database with the following structure:
 
-   The application uses MySQL database with the following structure:
-
-   ```sql
-   CREATE DATABASE IF NOT EXISTS workers_tasks_db;
-   USE workers_tasks_db;
+```sql
+CREATE DATABASE IF NOT EXISTS workers_tasks_db;
+USE workers_tasks_db;
 
    CREATE TABLE IF NOT EXISTS workers (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -95,45 +102,92 @@ flutter pub get
    );
    ```
 
-   ### Database Configuration
+### Database Configuration
 
-   1. Open phpMyAdmin in your XAMPP installation
-   2. Create a new database named `workers_tasks_db`
-   3. Import the SQL file (api/create_workers_table.sql) or run the above SQL commands
-   4. The table will be created with the following fields:
-      - `id`: Auto-incrementing primary key
-      - `full_name`: Worker's full name (required)
-      - `email`: Worker's email address (unique, required)
-      - `password`: Hashed password (required)
-      - `phone`: Contact number (required)
-      - `address`: Worker's address (required)
-      - `profile_image`: Path to profile image (optional)
-      - `created_at`: Timestamp of record creation
-
+1. Open phpMyAdmin in your XAMPP installation
+2. Create a new database named `workers_tasks_db`
+3. Import the SQL files:
+   - `api/create_workers_table.sql`
+   - `api/create_works_tables.sql`
 
 5. Run the application:
 ```bash
 flutter run
 ```
 
-## Project Structure
+## Features in Detail
 
-```
-lib/
-├── screens/
-│   ├── login_screen.dart
-│   ├── registration_screen.dart
-│   └── profile_screen.dart
-├── models/
-├── services/
-└── main.dart
-```
+### User Authentication
+- **Login Screen**
+  - Email validation
+  - Password visibility toggle
+  - Error handling with user-friendly messages
+  - Session persistence
+  - Automatic login for existing sessions
+
+- **Registration Screen**
+  - Form validation for all fields
+  - Optional profile picture upload
+  - Password visibility toggle
+  - Phone number validation
+  - Multiline address input
+
+### Task Management
+- **Task List Screen**
+  - View all assigned tasks
+  - Task status indicators (pending/completed)
+  - Due date tracking
+  - Submission management
+  - Edit submission functionality
+  - Pull-to-refresh
+  - Profile quick access
+
+- **Submit Work Screen**
+  - Submit new work
+  - Edit existing submissions
+  - Success feedback
+  - Form validation
+
+### Profile Management
+- **Profile Screen**
+  - Display worker information
+  - Profile picture display
+  - Task statistics overview
+  - Quick access to task list
+  - Secure logout with confirmation
+  - Session management
+
+### Security Features
+- Password hashing using SHA1
+- Session management using SharedPreferences
+- Form validation on both client and server side
+- Secure file upload handling
+- Input sanitization
+- Confirmation dialogs for important actions
+
+### UI/UX Features
+- Gradient backgrounds
+- Card-based layouts
+- Smooth animations
+- Loading indicators
+- Error message displays
+- Responsive design
+- Modern form inputs with icons
+- Password visibility toggle
+- Profile picture upload preview
+- Task status color coding
+- Interactive task cards
+- Pull-to-refresh functionality
+- Confirmation dialogs
+- Profile dropdown menu
 
 ## API Endpoints
 
-The application uses the following API endpoints (configured in `app_config.dart`):
+The application uses the following API endpoints:
 - Login: `$baseUrl/api/login_worker.php`
 - Registration: `$baseUrl/api/register_worker.php`
+- Get Works: `$baseUrl/api/get_works.php`
+- Submit Work: `$baseUrl/api/submit_work.php`
 
 ## API Configuration
 
@@ -148,75 +202,13 @@ To change the IP address or base URL of the application:
 ```dart
 static const String baseUrl = 'http://10.0.2.2';
 ```
-3. Update the IP address to your desired value. For example:
-```dart
-static const String baseUrl = 'http://192.168.1.100';
-```
+3. Update the IP address to your desired value.
 
-The configuration class automatically handles:
-- API endpoint URLs
-- Image URLs
-- Path formatting
-
-The application uses `10.0.2.2` as the localhost IP address when running on an Android emulator. This is because:
-- `10.0.2.2` is a special alias to your host machine's loopback interface (127.0.0.1) when using Android emulator
-- It allows the emulator to access services running on your development machine
-
-For different environments, you'll need to modify the IP address:
-
-1. **Physical Android Device**:
-   - Use your computer's local IP address (e.g., `192.168.1.100`)
-   - Both your device and computer must be on the same network
-   - Find your IP using `ipconfig` (Windows) or `ifconfig` (Linux/Mac)
-
-2. **iOS Simulator**:
-   - Use `localhost` or `127.0.0.1` directly
-   - No special IP configuration needed
-
-3. **Production Environment**:
-   - Replace with your actual server domain/IP
-   - Example: `https://api.yourdomain.com`
-
-## Features in Detail
-
-### User Authentication
-- **Login Screen**
-  - Email validation
-  - Password visibility toggle
-  - Error handling with user-friendly messages
-  - Session persistence
-
-- **Registration Screen**
-  - Form validation for all fields
-  - Optional profile picture upload
-  - Password visibility toggle
-  - Phone number validation (digits only)
-  - Multiline address input
-
-### Profile Management
-- **Profile Screen**
-  - Display worker information
-  - Profile picture display
-  - Session management
-  - Secure logout functionality
-
-### Security Features
-- Password hashing using SHA1
-- Session management using SharedPreferences
-- Form validation on both client and server side
-- Secure file upload handling
-- Input sanitization
-
-### UI/UX Features
-- Gradient backgrounds
-- Card-based layouts
-- Smooth animations
-- Loading indicators
-- Error message displays
-- Responsive design
-- Modern form inputs with icons
-- Password visibility toggle
-- Profile picture upload preview
+For different environments:
+- **Android Emulator**: Use `10.0.2.2`
+- **Physical Android Device**: Use your computer's local IP address
+- **iOS Simulator**: Use `localhost` or `127.0.0.1`
+- **Production**: Use your actual server domain/IP
 
 
 
