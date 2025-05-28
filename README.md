@@ -151,7 +151,7 @@ The application uses a centralized configuration system located in `lib/config/a
 
 To change the IP address or base URL of the application:
 
-1. Open `lib/config/app_config.dart`
+1. Open  [/lib/config/app_config.dart](/lib/config/app_config.dart)
 2. Locate the `baseUrl` constant:
 ```dart
 static const String baseUrl = 'http://10.0.2.2';
@@ -198,7 +198,7 @@ flutter pub get
 5. Import the database:
    - Open phpMyAdmin
    - Create a new database named `workers_tasks_db`
-   - Import the `api/workers_tasks_db.sql` file
+   - Import the [/api/workers_tasks_db.sql](/api/workers_tasks_db.sql) file 
 
 6. Run the application:
 ```bash
