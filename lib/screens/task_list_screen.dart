@@ -186,23 +186,16 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   PopupMenuButton<String>(
                     icon: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                      ),
                       child: CircleAvatar(
-                        radius: 16,
+                        radius: 20,
                         backgroundColor: Colors.white,
                         child: widget.workerData['profile_image'] != null && 
                                widget.workerData['profile_image'].toString().isNotEmpty
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(20),
                                 child: Container(
-                                  width: 32,
-                                  height: 32,
+                                  width: 40,
+                                  height: 40,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
@@ -216,7 +209,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                               )
                             : const Icon(
                                 Icons.person,
-                                size: 20,
+                                size: 24,
                                 color: Colors.indigo,
                               ),
                       ),
