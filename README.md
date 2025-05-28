@@ -207,11 +207,13 @@ flutter run
 
 ## Screenshots
 
-| Login Page | Register Page | Task List Page | Submit Work Page | Edit Submission Page | Profile Page (Top) | Profile Page (Bottom) |
-|------------|---------------|----------------|------------------|----------------------|--------------------|-----------------------|
-| ![Login](loginPage.png) | ![Register](registerPage.png) | ![Task List](TaskListPage.png) | ![Submit Work](SubmitWork.png) | ![Edit Submission](EditSubmission.png) | ![Profile Top](ProfilePageUp.png) | ![Profile Bottom](ProfilePageDown.png) |
+| Login Page | Register Page | Task List Page |
+|------------|---------------|----------------|
+| ![Login](loginPage.png) | ![Register](registerPage.png) | ![Task List](TaskListPage.png) | 
 
-
+| Edit Submission Page | Submit Work Page  | Profile Page  |
+|----------------------|--------------------|-----------------------|
+| ![Edit Submission](EditSubmission.png) | ![Submit Work](SubmitWork.png) | ![Profile Bottom](ProfilePageDown.png) |
 
 
 
