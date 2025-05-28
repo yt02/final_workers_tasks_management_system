@@ -134,24 +134,6 @@ lib/
 - Input sanitization
 - Confirmation dialogs for important actions
 
-### UI/UX Features
-- Gradient backgrounds
-- Card-based layouts
-- Smooth animations
-- Loading indicators
-- Error message displays
-- Responsive design
-- Modern form inputs with icons
-- Password visibility toggle
-- Profile picture upload preview
-- Task status color coding
-- Interactive task cards
-- Pull-to-refresh functionality
-- Confirmation dialogs
-- Profile dropdown menu
-- Consistent task card design across screens
-- Date formatting and display
-- Status badges with color indicators
 
 ## API Endpoints
 
