@@ -207,9 +207,9 @@ flutter run
 
 ## Screenshots
 
-| Login Page | Register Page | Profile Page | Task List Page |
-|------------|---------------|--------------|----------------|
-| ![Login](https://github.com/user-attachments/assets/06aa404e-0205-4dcd-8ab0-523790c2e15c) | ![Register](https://github.com/user-attachments/assets/85ba7b6c-f422-494f-9ea9-7b60a9ae3ae8) | ![Profile](https://github.com/user-attachments/assets/03401071-5149-47e2-8a1b-2585eaa4c77d) | ![Task List](https://github.com/user-attachments/assets/your-task-list-screenshot) |
+| Login Page | Register Page | Task List Page | Submit Work Page | Edit Submission Page | Profile Page (Top) | Profile Page (Bottom) |
+|------------|---------------|----------------|------------------|----------------------|--------------------|-----------------------|
+| ![Login](loginPage.png) | ![Register](registerPage.png) | ![Task List](TaskListPage.png) | ![Submit Work](SubmitWork.png) | ![Edit Submission](EditSubmission.png) | ![Profile Top](ProfilePageUp.png) | ![Profile Bottom](ProfilePageDown.png) |
 
 
 
