@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_screen.dart';
 import 'registration_screen.dart';
-import 'task_list_screen.dart';
+import 'main_navigation_screen.dart';
 import '../config/app_config.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => TaskListScreen(
+            builder: (context) => MainNavigationScreen(
               workerId: int.parse(worker['id'].toString()),
               workerName: worker['full_name'].toString(),
               workerData: worker,
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskListScreen(
+                builder: (context) => MainNavigationScreen(
                   workerId: int.parse(data['worker']['id'].toString()),
                   workerName: data['worker']['full_name'].toString(),
                   workerData: data['worker'],

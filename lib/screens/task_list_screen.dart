@@ -12,12 +12,14 @@ class TaskListScreen extends StatefulWidget {
   final int workerId;
   final String workerName;
   final Map<String, dynamic> workerData;
+  final bool isInTabView;
 
   const TaskListScreen({
     super.key,
     required this.workerId,
     required this.workerName,
     required this.workerData,
+    this.isInTabView = false,
   });
 
   @override
@@ -132,14 +134,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
           Icon(
             Icons.task_alt,
             size: 80,
-            color: Colors.indigo.shade200,
+            color: widget.isInTabView ? Colors.white.withOpacity(0.5) : Colors.indigo.shade200,
           ),
           const SizedBox(height: 16),
           Text(
             _message ?? 'No tasks assigned yet',
             style: TextStyle(
               fontSize: 18,
-              color: Colors.indigo.shade700,
+              color: widget.isInTabView ? Colors.white.withOpacity(0.8) : Colors.indigo.shade700,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -149,8 +151,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
             icon: const Icon(Icons.refresh),
             label: const Text('Refresh'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.indigo,
-              foregroundColor: Colors.white,
+              backgroundColor: widget.isInTabView ? Colors.white : Colors.indigo,
+              foregroundColor: widget.isInTabView ? Colors.indigo : Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -162,8 +164,310 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 80,
+            color: widget.isInTabView ? Colors.white.withOpacity(0.5) : Colors.red.shade300,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Error Loading Tasks',
+            style: TextStyle(
+              fontSize: 18,
+              color: widget.isInTabView ? Colors.white.withOpacity(0.8) : Colors.red.shade700,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _error ?? 'Unknown error occurred',
+            style: TextStyle(
+              fontSize: 14,
+              color: widget.isInTabView ? Colors.white.withOpacity(0.6) : Colors.red.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: _fetchWorks,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Retry'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: widget.isInTabView ? Colors.white : Colors.red,
+              foregroundColor: widget.isInTabView ? Colors.red : Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTaskCard(Work work, Color statusColor, bool isOverdue) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.indigo.shade100,
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    work.title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.indigo.shade800,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: statusColor,
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    work.status.toUpperCase(),
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              work.description,
+              style: TextStyle(
+                color: Colors.indigo.shade600,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 16,
+                        color: isOverdue
+                            ? Colors.red
+                            : Colors.indigo.shade600,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Due: ${work.dueDate.toString().split(' ')[0]}',
+                        style: TextStyle(
+                          color: isOverdue
+                              ? Colors.red
+                              : Colors.indigo.shade600,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.assignment_turned_in,
+                      size: 16,
+                      color: Colors.indigo.shade600,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Assigned: ${work.dateAssigned.toString().split(' ')[0]}',
+                      style: TextStyle(
+                        color: Colors.indigo.shade600,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            if (work.status == 'completed') ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.indigo.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.indigo.shade200,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          size: 16,
+                          color: Colors.green.shade600,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Submission',
+                          style: TextStyle(
+                            color: Colors.indigo.shade800,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Submitted: ${work.submittedAt?.toString().split(' ')[0] ?? 'N/A'}',
+                          style: TextStyle(
+                            color: Colors.indigo.shade600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      work.submissionText ?? 'No submission text provided',
+                      style: TextStyle(
+                        color: Colors.indigo.shade700,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SubmitWorkScreen(
+                          work: work,
+                          workerId: widget.workerId,
+                          isEditing: true,
+                        ),
+                      ),
+                    ).then((_) => _fetchWorks());
+                  },
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Edit Submission'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.isInTabView) {
+      // When in tab view, return just the content without Scaffold
+      return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.indigo.shade400,
+              Colors.cyan.shade400,
+            ],
+          ),
+        ),
+        child: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              )
+            : _error != null
+                ? _buildErrorState()
+                : _works.isEmpty
+                    ? _buildEmptyState()
+                    : RefreshIndicator(
+                        onRefresh: _fetchWorks,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: _works.length,
+                          itemBuilder: (context, index) {
+                            final work = _works[index];
+                            final isOverdue = work.dueDate.isBefore(DateTime.now());
+                            final statusColor = work.status == 'completed'
+                                ? Colors.green
+                                : isOverdue
+                                    ? Colors.red
+                                    : Colors.orange;
+
+                            return Card(
+                              elevation: 4,
+                              margin: const EdgeInsets.only(bottom: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SubmitWorkScreen(
+                                        work: work,
+                                        workerId: widget.workerId,
+                                        isEditing: work.status == 'completed',
+                                      ),
+                                    ),
+                                  ).then((_) => _fetchWorks());
+                                },
+                                borderRadius: BorderRadius.circular(16),
+                                child: _buildTaskCard(work, statusColor, isOverdue),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+      );
+    }
+
+    // Original full screen layout when not in tab view
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
