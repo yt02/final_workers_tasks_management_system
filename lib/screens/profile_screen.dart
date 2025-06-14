@@ -205,13 +205,13 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     child: Row(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black26,
                                 blurRadius: 10,
-                                offset: const Offset(0, 5),
+                                offset: Offset(0, 5),
                               ),
                             ],
                           ),
@@ -258,9 +258,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                   child: SlideTransition(
                     position: _slideAnimation,
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
                         ),
@@ -268,7 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           BoxShadow(
                             color: Colors.black12,
                             blurRadius: 20,
-                            offset: const Offset(0, -5),
+                            offset: Offset(0, -5),
                           ),
                         ],
                       ),
@@ -366,11 +366,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               decoration: BoxDecoration(
                 color: iconColor,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 5,
-                    offset: const Offset(0, 2),
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -426,6 +426,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
     final completedTasks = _works.where((work) => work.status == 'completed').length;
     final pendingTasks = _works.where((work) => work.status == 'pending').length;
+    final overdueTasks = _works.where((work) => work.status == 'overdue').length;
     final totalTasks = _works.length;
 
     return InkWell(
@@ -505,6 +506,11 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     'Pending',
                     pendingTasks.toString(),
                     Colors.orange,
+                  ),
+                  _buildTaskStat(
+                    'Overdue',
+                    overdueTasks.toString(),
+                    Colors.red,
                   ),
                 ],
               ),

@@ -334,7 +334,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                                      MaterialPageRoute(builder: (context) => const RegistrationScreen()),
                                     );
                                   },
                                   child: const Text(

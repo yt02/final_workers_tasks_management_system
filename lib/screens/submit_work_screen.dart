@@ -10,11 +10,11 @@ class SubmitWorkScreen extends StatefulWidget {
   final bool isEditing;
 
   const SubmitWorkScreen({
-    Key? key,
+    super.key,
     required this.work,
     required this.workerId,
     this.isEditing = false,
-  }) : super(key: key);
+  });
 
   @override
   _SubmitWorkScreenState createState() => _SubmitWorkScreenState();
@@ -352,10 +352,10 @@ class _SubmitWorkScreenState extends State<SubmitWorkScreen> {
                       const SizedBox(height: 24),
                       Text(
                         widget.isEditing ? 'Edit Your Submission' : 'Submit Your Work',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 255, 255, 255),
+                          color: Color.fromARGB(255, 255, 255, 255),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -363,8 +363,8 @@ class _SubmitWorkScreenState extends State<SubmitWorkScreen> {
                         widget.isEditing 
                             ? 'Update your submission details below'
                             : 'Please describe the work you completed',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 242, 243, 245),
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 242, 243, 245),
                           fontSize: 14,
                         ),
                       ),
