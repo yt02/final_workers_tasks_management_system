@@ -124,7 +124,7 @@ api/
 ### **Authentication & Registration**
 | Login Screen | Registration Screen |
 |--------------|---------------------|
-| ![Login](outputImage/login_page.png) | ![Register](outputImage/register_page.png) |
+| ![Login](outputImage/login_page.png) | ![Register](outputImage/register_page.jpg) |
 | Clean login interface with validation | Comprehensive registration with profile image |
 
 ### **Task Management**
@@ -204,12 +204,12 @@ api/
 
 ### **Key UI Features Demonstrated**
 
-#### **📱 Login & Registration (Screenshots 1-2)**
+#### **📱 Login & Registration**
 - **Secure Authentication** - Clean login with email validation
 - **Comprehensive Registration** - Profile image upload and form validation
 - **Professional Design** - Modern gradient backgrounds and smooth animations
 
-#### **📋 Task Management (Screenshots 3-6)**
+#### **📋 Task Management**
 - **Visual Status Indicators** - Green (completed), Orange (pending), Red (overdue)
 - **Interactive Task Cards** - Tap to submit work or edit submissions
 - **Professional Forms** - Rich text editing with character counters
@@ -217,7 +217,7 @@ api/
 - **Timeline View** - Professional layout with timestamps and status indicators
 - **Success Feedback** - Clear confirmation messages and smooth transitions
 
-#### **👤 Enhanced Profile (Screenshots 6-7)**
+#### **👤 Enhanced Profile**
 - **Integrated Edit Button** - Edit functionality built into completion card
 - **Progress Tracking** - Real-time completion percentage with color coding
 - **Interactive Phone Numbers** - Call and copy functionality for all phone fields
