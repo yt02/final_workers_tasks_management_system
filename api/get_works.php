@@ -109,7 +109,6 @@ try {
             'date_assigned' => $row['date_assigned'],
             'due_date' => $row['due_date'],
             'status' => $row['status'],
-            'submission_id' => $row['submission_id'],
             'submission_text' => $row['submission_text'],
             'submitted_at' => $row['submitted_at']
         ];

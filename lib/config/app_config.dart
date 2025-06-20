@@ -1,6 +1,6 @@
 class AppConfig {
   // Base URL configuration
-  static const String baseUrl = 'http://192.168.65.233';
+  static const String baseUrl = 'http://192.168.239.191';
 
   // API endpoints
   static String get loginUrl => '$baseUrl/api/login_worker.php';
