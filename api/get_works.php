@@ -74,12 +74,12 @@ try {
 
     // Get works for the worker
     $stmt = $conn->prepare("
-        SELECT w.*, s.submission_text, s.submitted_at 
-        FROM tbl_works w 
+        SELECT w.*, s.id as submission_id, s.submission_text, s.submitted_at
+        FROM tbl_works w
         LEFT JOIN tbl_submissions s ON w.id = s.work_id AND s.worker_id = ?
-        WHERE w.assigned_to = ? 
-        ORDER BY 
-            CASE 
+        WHERE w.assigned_to = ?
+        ORDER BY
+            CASE
                 WHEN w.status = 'overdue' THEN 1
                 WHEN w.status = 'pending' THEN 2
                 WHEN w.status = 'completed' THEN 3
@@ -109,6 +109,7 @@ try {
             'date_assigned' => $row['date_assigned'],
             'due_date' => $row['due_date'],
             'status' => $row['status'],
+            'submission_id' => $row['submission_id'],
             'submission_text' => $row['submission_text'],
             'submitted_at' => $row['submitted_at']
         ];

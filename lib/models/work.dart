@@ -5,6 +5,7 @@ class Work {
   final DateTime dateAssigned;
   final DateTime dueDate;
   final String status;
+  final int? submissionId;
   final String? submissionText;
   final DateTime? submittedAt;
 
@@ -15,6 +16,7 @@ class Work {
     required this.dateAssigned,
     required this.dueDate,
     required this.status,
+    this.submissionId,
     this.submissionText,
     this.submittedAt,
   });
@@ -27,8 +29,11 @@ class Work {
       dateAssigned: DateTime.parse(json['date_assigned']),
       dueDate: DateTime.parse(json['due_date']),
       status: json['status'],
+      submissionId: json['submission_id'] != null
+          ? int.parse(json['submission_id'].toString())
+          : null,
       submissionText: json['submission_text'],
-      submittedAt: json['submitted_at'] != null 
+      submittedAt: json['submitted_at'] != null
           ? DateTime.parse(json['submitted_at'])
           : null,
     );
@@ -42,6 +47,7 @@ class Work {
       'date_assigned': dateAssigned.toIso8601String(),
       'due_date': dueDate.toIso8601String(),
       'status': status,
+      'submission_id': submissionId,
       'submission_text': submissionText,
       'submitted_at': submittedAt?.toIso8601String(),
     };
