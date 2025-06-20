@@ -136,7 +136,7 @@ api/
 ### **Enhanced Profile Features**
 | Profile Overview | Profile Details | Profile Completion 75% | Edit Profile |
 |------------------|-----------------|----------------------|------------------------|
-| ![Profile Top](outputImage/ProfileCompletion100%.jpg) | ![Profile Bottom](outputImage/ProfileDetail.jpg) | ![Profile Completion 75%](outputImage/ProfileCompletion75%.jpg) | ![Edit Profile](outputImage/EditProfile.jpg) |
+| ![Profile Top](outputImage/ProfileCompletion100.jpg) | ![Profile Bottom](outputImage/ProfileDetail.jpg) | ![Profile Completion 75%](outputImage/ProfileCompletion75.jpg) | ![Edit Profile](outputImage/EditProfile.jpg) |
 | Integrated edit with completion tracking | Comprehensive personal information | Profile completion percentage | Interactive phone numbers and organized sections |
 
 ### **What You'll See in Each Screenshot**
